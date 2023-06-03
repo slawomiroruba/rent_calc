@@ -12,11 +12,11 @@
 </head>
 
 <body>
-  <h1><strong>CARBE</strong><br>Kalkulator najmu samochodu</h1>
+  <h1><strong style="margin-bottom: 8px; display: inline-block;">CARBE</strong><br>Wycena miesięcznej raty<br>długoterminowego najmu samochodu</h1>
   <div class="wrapper">
 
     <form>
-      <div class="flex-container">
+      <div class="flex-container-2">
         <label for="cenaKatalogowa" class="flex-item">
           Cena katalogowa (netto): <input type="number" id="cenaKatalogowa" name="cenaKatalogowa" step="0.01"
             value="208699.19">
@@ -27,7 +27,7 @@
           <input type="number" id="wskaznikOplatyWstepnej" name="wskaznikOplatyWstepnej" step="0.01" value="0.1">
         </label>
       </div>
-      <div class="flex-container">
+      <div class="flex-container-2">
         <label for="cenaPodstawy" class="flex-item">
           Cena podstawy (netto):
           <input type="number" id="cenaPodstawy" name="cenaPodstawy" step="0.01" value="137211.39">
@@ -37,7 +37,7 @@
           <input type="number" id="cenaWyposazenia" name="cenaWyposazenia" step="0.01" value="71487.80">
         </label>
       </div>
-      <div class="flex-container">
+      <div class="flex-container-2">
         <label for="limitRocznyPrzebiegu" class="flex-item">
           Roczny limit kilometrów: <input type="number" id="limitRocznyPrzebiegu" name="limitRocznyPrzebiegu" step="100"
             value="15000">
@@ -46,7 +46,7 @@
           Rabat (netto): <input type="number" id="rabat" name="rabat" step="0.01" value="0">
         </label>
       </div>
-      <div class="flex-container">
+      <div class="flex-container-3">
         <label for="wskaznikMarzowowsci" class="flex-item">
           Marżowość:
           <sup>1 - brak zysku</sup>
@@ -55,7 +55,7 @@
         <label for="wplywNSTO" class="flex-item">
           Wpływ NSTO:
           <sup>0,91 - brak wpływu</sup>
-          <input type="number" id="wplywNSTO" name="wplywNSTO"  step="0.01" value="1.2">
+          <input type="number" id="wplywNSTO" name="wplywNSTO"  step="0.01" value="0.91">
         </label>
         <label for="okresWynajmu" class="flex-item">
           Okres wynajmu: 
@@ -64,7 +64,7 @@
         </label>
       </div>
       <h2>Wartość procentowa samochodu po wynajmie (%)</h2>
-      <div class="flex-container percent-after-rental">
+      <div class="flex-container-5 percent-after-rental">
         <label for="after-24" class="flex-item">
           Po 24 msc: <input type="number" id="24" name="after-24" value="58" step="1">
         </label>
@@ -84,7 +84,7 @@
 
 
       <h2>Opcje dodatkowe</h2>
-      <div class="flex-container additional-options">
+      <div class="flex-container-5 additional-options">
         <label for="garageOption" class="flex-item">
           Serwis: <input type="number" id="garageOption" name="garageOption" step="0.01" value="100">
         </label>

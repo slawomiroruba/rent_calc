@@ -35,7 +35,7 @@ function calculateLease() {
 
     // Opłaty za dodatkowe opcje (array)
     let kosztyDodatkowychOpcji = 0;
-    const additionalOptions = document.querySelectorAll('.additional-options input').forEach(function (input) {
+    document.querySelectorAll('.additional-options input').forEach(function (input) {
         if (input.value !== "") {
             kosztyDodatkowychOpcji += parseFloat(input.value);
         }
@@ -133,22 +133,26 @@ function calculateLease() {
     document.getElementById('result').innerHTML = "Miesięczna rata wynajmu: " + rataMiesieczna + " zł (netto)";
 }
 
-function calculatePrice() {
+function updateCatalogPrice() {
     var cenaKatalogowa = document.getElementById('cenaKatalogowa');
     var cenaPodstawy = document.getElementById('cenaPodstawy');
     var cenaWyposazenia = document.getElementById('cenaWyposazenia');
 
-    if (cenaKatalogowa.value && cenaPodstawy.value && !cenaWyposazenia.value) {
-        cenaWyposazenia.value = (parseFloat(cenaKatalogowa.value) - parseFloat(cenaPodstawy.value)).toFixed(2);
-    } else if (cenaKatalogowa.value && cenaWyposazenia.value && !cenaPodstawy.value) {
-        cenaPodstawy.value = (parseFloat(cenaKatalogowa.value) - parseFloat(cenaWyposazenia.value)).toFixed(2);
-    } else if (cenaPodstawy.value && cenaWyposazenia.value && !cenaKatalogowa.value) {
+    if (cenaPodstawy.value && cenaWyposazenia.value) {
         cenaKatalogowa.value = (parseFloat(cenaPodstawy.value) + parseFloat(cenaWyposazenia.value)).toFixed(2);
     }
 }
 
+function clearBaseAndEquipmentPrice() {
+    var cenaPodstawy = document.getElementById('cenaPodstawy');
+    var cenaWyposazenia = document.getElementById('cenaWyposazenia');
+
+    cenaPodstawy.value = '';
+    cenaWyposazenia.value = '';
+}
 
 // Dodaj procedury obsługi zdarzeń do pól.
-document.getElementById('cenaKatalogowa').addEventListener('change', calculatePrice);
-document.getElementById('cenaPodstawy').addEventListener('change', calculatePrice);
-document.getElementById('cenaWyposazenia').addEventListener('change', calculatePrice);
+document.getElementById('cenaPodstawy').addEventListener('change', updateCatalogPrice);
+document.getElementById('cenaWyposazenia').addEventListener('change', updateCatalogPrice);
+document.getElementById('cenaKatalogowa').addEventListener('change', clearBaseAndEquipmentPrice);
+

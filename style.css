@@ -1,28 +1,28 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    padding: 50px;
+    padding: 16px;
 }
 
 h1 {
     color: #333;
     text-align: center;
     margin-bottom: 20px;
-    font-size: 30px;
+    font-size: 24px;
 }
 
 h2 {
     color: #333;
     text-align: center;
     margin-bottom: 20px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .wrapper {
     display: flex;
     gap: 24px;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
 }
 
 form {
@@ -117,15 +117,104 @@ input[type=button] {
     text-align: center;
 }
 
-.flex-container {
+.flex-container-2,
+.flex-container-3,
+.flex-container-4,
+.flex-container-5 {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
-.flex-item {
+.flex-container-2 .flex-item {
     flex: 1;
+    min-width: 208px;
+}
+
+.flex-container-3 .flex-item {
+    flex: 1;
+    min-width: 160px;
+}
+
+.flex-container-4 .flex-item {
+    flex: 1;
+    min-width: 104px;
+}
+
+.flex-container-5 .flex-item {
+    flex: 1;
+    min-width: 86px;
 }
 
 .additional-options label {
     font-size: 14px;
+}
+
+// Media query
+@media (min-width: 768px) {
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 50px;
+    }
+
+
+    .wrapper {
+        justify-content: center;
+        align-items: flex-start;
+
+    }
+
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 30px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    // Media query
+    @media (min-width: 768px) {
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 50px;
+        }
+
+
+        .wrapper {
+            justify-content: center;
+            align-items: flex-start;
+
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 30px;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .flex-container-2 .flex-item,
+        .flex-container-3 .flex-item,
+        .flex-container-4 .flex-item, 
+        .flex-container-5 .flex-item {
+            min-width: unset !important;
+        }
+    }
 }
