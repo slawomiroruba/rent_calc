@@ -1,42 +1,9 @@
 function calculateLease() {
-
-    const logDiv = document.getElementById('logDiv');  // Make sure to have a div with id 'logDiv' in your HTML
-    logDiv.classList.remove('hidden');  // Remove the 'hidden' class from the div
-    logDiv.innerHTML = '';  // Clear the div
-
-
-    const log = (label, message) => {
-        let p = document.createElement('p');
-
-        if (!message) {
-            p.style.textAlign = 'center';
-            p.style.color = 'red';
-            p.textContent = label;
-        } else {
-            let strong = document.createElement('strong');
-            strong.textContent = label;
-            p.appendChild(strong);
-
-            let span = document.createElement('span');
-
-            // If the message is a string and ends with ' zł', format it as a currency
-            if (typeof message === 'string' && message.endsWith(' zł')) {
-                let number = parseFloat(message.replace(' zł', ''));
-                span.textContent = number.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' });
-            } else {
-                span.textContent = message;
-            }
-
-            span.style.cssFloat = 'right'; // This makes the message float to the right
-            p.appendChild(span);
-        }
-
-        logDiv.appendChild(p);
-    }
-
+    // Funkcja pomocnicza do logowania
+    const logger = new Logger();
 
     /* 1. Pobieranie danych z formularza */
-    log("1. Pobieranie danych z formularza");
+    logger.log("1. Pobieranie danych z formularza");
 
 
     // Cena katalogowa
@@ -55,7 +22,10 @@ function calculateLease() {
     const rabat = parseFloat(document.getElementById('rabat').value);
 
     // Doliczanie wskaźnika marżowości
-    const wskaznikMarzowowsci = parseFloat(document.getElementById('wskaznikMarzowowsci').value);;
+    const wskaznikMarzowowsci = parseFloat(document.getElementById('wskaznikMarzowowsci').value);
+
+    // Wpływ NSTO na wartość rezydualną
+    const wplywNSTO = parseFloat(document.getElementById('wplywNSTO').value);
 
     // Okres wynajmu
     const okresWynajmu = parseInt(document.getElementById('okresWynajmu').value);
@@ -81,76 +51,78 @@ function calculateLease() {
         }
     });
 
+    console.log("Wartość samochodu po okresie wynajmu: ", wartoscSamochoduPoOkresieWynajmu);
+
+    const carValuePredictor = new CarValuePredictor(preparePoints(wartoscSamochoduPoOkresieWynajmu));
 
     // Console log everything
-    log("Cena katalogowa: ", cenaKatalogowa + " zł");
-    log("Opłata wstępna: ", wskaznikOplatyWstepnej + " %");
-    log("Cena podstawy: ", cenaPodstawy + " zł");
-    log("Cena opcji: ", cenaWyposazenia + " zł");
-    log("Przebieg roczny: ", limitRocznyPrzebiegu + " km");
-    log("Rabat: ", rabat + " zł");
-    log("Wskaźnik marżowości: ", wskaznikMarzowowsci);
+    logger.log("Cena katalogowa: ", cenaKatalogowa + " zł");
+    logger.log("Cena podstawy: ", cenaPodstawy + " zł");
+    logger.log("Cena wyposażenia: ", cenaWyposazenia + " zł");
+    logger.log("Opłata wstępna: ", wskaznikOplatyWstepnej);
+    logger.log("Przebieg roczny: ", limitRocznyPrzebiegu + " km");
+    logger.log("Rabat: ", rabat + " zł");
+    logger.log("Wskaźnik marżowości: ", wskaznikMarzowowsci);
 
-    log("Opłaty za dodatkowe opcje: ", kosztyDodatkowychOpcji + " zł");
+    logger.log("Opłaty za dodatkowe opcje: ", kosztyDodatkowychOpcji + " zł");
     // log the object properties
-    for (let key in wartoscSamochoduPoOkresieWynajmu) {
-        if (wartoscSamochoduPoOkresieWynajmu.hasOwnProperty(key) && key == okresWynajmu) {
-            log("Wartosc po " + key + " msc: ", wartoscSamochoduPoOkresieWynajmu[key] + "%");
-        }
-    }
-    log("Okres wynajmu: ", okresWynajmu + " miesięcy");
+    
+    logger.log("Wartosc po " + okresWynajmu + " msc: ", carValuePredictor.predict(okresWynajmu) + "%");
+    logger.log("Okres wynajmu: ", okresWynajmu + " miesięcy");
 
 
     if (cenaKatalogowa !== cenaPodstawy + cenaWyposazenia) {
-        log("Suma ceny bazowej i opcji: ", (cenaPodstawy + cenaWyposazenia));
-        log("Cena katalogowa: ", cenaKatalogowa);
+        logger.log("Suma ceny bazowej i opcji: ", (cenaPodstawy + cenaWyposazenia));
+        logger.log("Cena katalogowa: ", cenaKatalogowa);
         alert("Suma ceny bazowej i opcji nie zgadza się z ceną katalogową.");
         return;
-    } else if (okresWynajmu < 24 || okresWynajmu > 60) {
-        alert("Okres wynajmu powinien być między 24 a 60 miesięcy.");
+    } else if (okresWynajmu < 1 || okresWynajmu > 120) {
+        alert("Okres wynajmu powinien być między 1 a 120 miesięcy.");
         return;
     }
 
 
     /* 3. Obliczanie wyniku */
-    log("2. Obliczanie wyniku");
+    logger.log("2. Obliczanie wyniku");
 
     // Dodaj cenę katalogową samochodu i cenę wyposażenia, aby uzyskać pełną wartość samochodu
     const wartoscSamochodu = cenaPodstawy + cenaWyposazenia;
 
+    // Obliczanie kwoty po rabacie
+    const zrabatowanaCena = Number.isInteger(rabat) ? wartoscSamochodu - rabat : wartoscSamochodu;
+    logger.log("Zrabatowana cena: ", zrabatowanaCena.toFixed(2) + " zł");
+
     // Obliczanie opłaty wstępnej 
     const kwotaOplatyWstepnej = cenaKatalogowa * wskaznikOplatyWstepnej;
-    log("Kwota opłaty wstępnej: ", kwotaOplatyWstepnej.toFixed(2) + " zł");
+    logger.log("Kwota opłaty wstępnej: ", kwotaOplatyWstepnej.toFixed(2) + " zł");
 
 
     // Obliczanie wskaznika NSTO
-    const wskaznikNSTO = cenaWyposazenia / cenaKatalogowa;
-    log("Wskaznik NSTO: ", wskaznikNSTO.toFixed(2));
+    const wskaznikNSTO = cenaWyposazenia / cenaPodstawy;
+    logger.log("Wskaznik NSTO: ", wskaznikNSTO.toFixed(2));
 
     // Obliczanie wartości NSTO
-    const wartoscNSTO = cenaKatalogowa * wskaznikNSTO;
-    log("Wartość NSTO: ", wartoscNSTO.toFixed(2) + " zł");
+    // const wartoscNSTO = cenaKatalogowa * wskaznikNSTO;
+    // logger.log("Wartość NSTO: ", wartoscNSTO.toFixed(2) + " zł");
 
-    // Obliczanie kwoty po rabacie
-    const zrabatowanaCena = wartoscSamochodu - rabat;
-    log("Zrabatowana cena: ", zrabatowanaCena.toFixed(2) + " zł");
-
-    // Dodaj wartość NSTO do wartości po rabacie
-    const WartoscZNSTO = zrabatowanaCena + wartoscNSTO;
-    log("Wartość z NSTO: ", WartoscZNSTO.toFixed(2) + " zł");
-
+    // Dodajemy opłatę za limit kilometrów
+    const oplataZaPrzebieg =  limitRocznyPrzebiegu > 15000 ? (limitRocznyPrzebiegu - 15000) * 0.1 : 0;
+    logger.log("Opłata za limit kilometrów: ", oplataZaPrzebieg.toFixed(2) + " zł");
 
     // Obliczanie wartości rezydualnej
-    const wartoscRezydualna = WartoscZNSTO * (wartoscSamochoduPoOkresieWynajmu[okresWynajmu] / 100);
-    log("Wartość rezydualna: ", wartoscRezydualna.toFixed(2) + " zł");
+    // TODO: dodać współczynnik wpływu wskaźnika NSTO na wartość rezydualną
+    console.log(((carValuePredictor.predict(okresWynajmu) / 100) * (1 + wplywNSTO * wskaznikNSTO)));
+    const wartoscRezydualna = wartoscSamochodu * ((carValuePredictor.predict(okresWynajmu) / 100) * (1 + wplywNSTO * wskaznikNSTO));
+    logger.log("Wartość rezydualna: ", wartoscRezydualna.toFixed(2) + " zł");
 
     // Obliczanie miesięcznej raty
-    const DoRozlozeniaNaRaty = WartoscZNSTO - wartoscRezydualna - kwotaOplatyWstepnej;
-    log("Do rozłożenia na raty: ", DoRozlozeniaNaRaty.toFixed(2) + " zł");
+    const DoRozlozeniaNaRaty = zrabatowanaCena - wartoscRezydualna - kwotaOplatyWstepnej  + oplataZaPrzebieg;
+    logger.log("Do rozłożenia na raty: ", DoRozlozeniaNaRaty.toFixed(2) + " zł");
 
     // Dodanie do raty opłaty za dodatkowe opcje
-    const rataMiesieczna = ((DoRozlozeniaNaRaty / okresWynajmu + kosztyDodatkowychOpcji) * wskaznikMarzowowsci).toFixed(2);
-    log("Miesięczna rata: ", rataMiesieczna + " zł");
+    const rataMiesieczna = (((DoRozlozeniaNaRaty / okresWynajmu + kosztyDodatkowychOpcji) * wskaznikMarzowowsci).toFixed(2));
+    logger.log("Rata bez opcji dodatkowych: ", (((DoRozlozeniaNaRaty / okresWynajmu) * wskaznikMarzowowsci).toFixed(2)) + " zł");
+    logger.log("Miesięczna rata: ", rataMiesieczna + " zł");
 
     // Wyświetlanie wyniku
     document.getElementById('result').innerHTML = "Miesięczna rata wynajmu: " + rataMiesieczna + " zł (netto)";
