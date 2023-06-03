@@ -66,7 +66,7 @@ function calculateLease() {
 
     logger.log("Opłaty za dodatkowe opcje: ", kosztyDodatkowychOpcji + " zł");
     // log the object properties
-    
+
     logger.log("Wartosc po " + okresWynajmu + " msc: ", carValuePredictor.predict(okresWynajmu) + "%");
     logger.log("Okres wynajmu: ", okresWynajmu + " miesięcy");
 
@@ -96,27 +96,32 @@ function calculateLease() {
     const kwotaOplatyWstepnej = cenaKatalogowa * wskaznikOplatyWstepnej;
     logger.log("Kwota opłaty wstępnej: ", kwotaOplatyWstepnej.toFixed(2) + " zł");
 
-
-    // Obliczanie wskaznika NSTO
-    const wskaznikNSTO = cenaWyposazenia / cenaPodstawy;
-    logger.log("Wskaznik NSTO: ", wskaznikNSTO.toFixed(2));
-
-    // Obliczanie wartości NSTO
-    // const wartoscNSTO = cenaKatalogowa * wskaznikNSTO;
-    // logger.log("Wartość NSTO: ", wartoscNSTO.toFixed(2) + " zł");
-
     // Dodajemy opłatę za limit kilometrów
-    const oplataZaPrzebieg =  limitRocznyPrzebiegu > 15000 ? (limitRocznyPrzebiegu - 15000) * 0.1 : 0;
+    const oplataZaPrzebieg = limitRocznyPrzebiegu > 15000 ? (limitRocznyPrzebiegu - 15000) * 0.1 : 0;
     logger.log("Opłata za limit kilometrów: ", oplataZaPrzebieg.toFixed(2) + " zł");
 
+    // Obliczanie wskaznika NSTO
+    const wskaznikNSTO = (cenaWyposazenia / cenaPodstawy) + 1;
+    logger.log("Wskaznik NSTO: ", wskaznikNSTO.toFixed(2));
+
+    // Obliczanie neutralnego wplywu NSTO
+    const neutralnyWplywNSTO = 1 / wskaznikNSTO;
+    logger.log("Neutralny wpływ NSTO: ", neutralnyWplywNSTO.toFixed(2));
+
+    // Ustawianie wartości wpływu NSTO (może to być wartość neutralna lub inna, zależnie od potrzeb)
+    const nowyWplywNSTO = neutralnyWplywNSTO * wplywNSTO; // zmień tę wartość, aby manipulować wpływem NSTO na wartość rezydualną
+    logger.log("Nowy wpływ NSTO: ", nowyWplywNSTO.toFixed(2));
+
+    //Obliczanie mnożnika NSTO
+    const mnoznikNSTO = wskaznikNSTO * nowyWplywNSTO * 1.1;
+    logger.log("Mnożnik NSTO: ", mnoznikNSTO.toFixed(2));
+
     // Obliczanie wartości rezydualnej
-    // TODO: dodać współczynnik wpływu wskaźnika NSTO na wartość rezydualną
-    console.log(((carValuePredictor.predict(okresWynajmu) / 100) * (1 + wplywNSTO * wskaznikNSTO)));
-    const wartoscRezydualna = wartoscSamochodu * ((carValuePredictor.predict(okresWynajmu) / 100) * (1 + wplywNSTO * wskaznikNSTO));
+    const wartoscRezydualna = (wartoscSamochodu * ((carValuePredictor.predict(okresWynajmu) / 100)) * mnoznikNSTO);
     logger.log("Wartość rezydualna: ", wartoscRezydualna.toFixed(2) + " zł");
 
     // Obliczanie miesięcznej raty
-    const DoRozlozeniaNaRaty = zrabatowanaCena - wartoscRezydualna - kwotaOplatyWstepnej  + oplataZaPrzebieg;
+    const DoRozlozeniaNaRaty = zrabatowanaCena - wartoscRezydualna - kwotaOplatyWstepnej + oplataZaPrzebieg;
     logger.log("Do rozłożenia na raty: ", DoRozlozeniaNaRaty.toFixed(2) + " zł");
 
     // Dodanie do raty opłaty za dodatkowe opcje
