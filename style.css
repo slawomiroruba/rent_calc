@@ -1,0 +1,122 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 50px;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 30px;
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.wrapper {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 540px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+#logDiv {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+strong {
+    font-weight: bold;
+}
+
+label {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+input[type=number] {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+select {
+    display: inline-block;
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #fff;
+    font-size: 16px;
+}
+
+input[type=button] {
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#result {
+    margin: 10px;
+    font-size: 16px;
+    color: #005512;
+    font-weight: bold;
+    text-align: center;
+}
+
+.flex-container {
+    display: flex;
+    gap: 10px;
+}
+
+.flex-item {
+    flex: 1;
+}
+
+.additional-options label {
+    font-size: 14px;
+}

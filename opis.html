@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Marked in the browser</title>
+</head>
+<body>
+  <div id="content"></div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+
+    const markdown = `
+## Kalkulator leasingu pracuje według następującej logiki, aby obliczyć miesięczną ratę:
+
+Pobieranie danych z formularza: Kalkulator zbiera wszystkie niezbędne informacje z formularza, takie jak cena katalogowa, opłata wstępna, cena bazowa (netto), cena wszystkich opcji, rabat, wskaźnik marżowości, okres wynajmu, limit roczny przebiegu, opłaty za dodatkowe opcje i wartość samochodu po okresie wynajmu.
+
+Walidacja danych wejściowych: Kalkulator sprawdza, czy suma ceny bazowej i opcji zgadza się z ceną katalogową. Jeśli nie, kalkulator wyświetla błąd. Sprawdza również, czy okres wynajmu mieści się w zakresie od 24 do 60 miesięcy. Jeśli nie, kalkulator również wyświetla błąd.
+
+Obliczanie wyniku: W następnych krokach kalkulator wykonuje szereg obliczeń, aby obliczyć miesięczną ratę:
+
+a. Wartość samochodu: Kalkulator dodaje cenę bazową i cenę wyposażenia, aby uzyskać pełną wartość samochodu.
+
+b. Opłata wstępna: Kalkulator oblicza opłatę wstępną, mnożąc cenę katalogową przez wskaźnik opłaty wstępnej.
+
+c. Wskaźnik NSTO: Kalkulator oblicza wskaźnik NSTO, dzieląc cenę wyposażenia przez cenę katalogową.
+
+d. Wartość NSTO: Kalkulator oblicza wartość NSTO, mnożąc cenę katalogową przez wskaźnik NSTO.
+
+e. Cena po rabacie: Kalkulator oblicza cenę po rabacie, odejmując rabat od pełnej wartości samochodu.
+
+f. Wartość z NSTO: Kalkulator dodaje wartość NSTO do ceny po rabacie.
+
+g. Wartość rezydualna: Kalkulator oblicza wartość rezydualną, mnożąc wartość z NSTO przez wartość samochodu po okresie wynajmu (wyrażoną w procentach).
+
+h. Do rozłożenia na raty: Kalkulator oblicza kwotę do rozłożenia na raty, odejmując wartość rezydualną i opłatę wstępną od wartości z NSTO.
+
+i. Miesięczna rata: Kalkulator oblicza miesięczną ratę, dzieląc kwotę do rozłożenia na raty przez okres wynajmu, dodając do tego opłaty za dodatkowe opcje, a następnie mnoży całość przez wskaźnik marżowości.
+
+Wyświetlanie wyniku: Kalkulator wyświetla obliczoną miesięczną ratę.
+`;
+    document.getElementById('content').innerHTML =
+      marked.parse(markdown);
+  </script>
+</body>
+</html>
